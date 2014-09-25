@@ -24,7 +24,7 @@ JacoKinematics::JacoKinematics(const ros::NodeHandle &node_handle)
 {
     node_handle.param<std::string>("tf_prefix", tf_prefix_, "jaco_");
 
-    node_handle.param<double>("base_to_api", base_to_api_, 0.028);
+    node_handle.param<double>("base_to_api", base_to_api_, 0.000); // Originally 0.028
     node_handle.param<double>("base_to_j1", base_to_j1_, 0.1544);
     node_handle.param<double>("j1_to_j2", j1_to_j2_, -0.1181);
     node_handle.param<double>("j2_to_j3", j2_to_j3_, 0.4100);
