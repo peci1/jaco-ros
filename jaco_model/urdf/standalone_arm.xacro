@@ -17,7 +17,7 @@
 
   <xacro:include filename="$(find jaco_model)/urdf/jaco_arm.xacro" />
 
-<link name="root">
+<link name="jaco_api_origin">
       <visual>
 	<origin xyz="0 0 0" rpy="0 0 0" />
 	<geometry>
@@ -33,6 +33,6 @@
       </collision>     
     </link>
 
-<xacro:jaco_arm  parent="root"/>
+<xacro:jaco_arm  parent="jaco_api_origin"/>
 
 </robot>
