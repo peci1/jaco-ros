@@ -1,0 +1,3 @@
+<launch>
+    <rosparam command="load" file="$(find jaco_moveit_config)/config/sensors.yaml" />
+</launch>
