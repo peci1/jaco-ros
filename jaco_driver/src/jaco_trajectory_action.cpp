@@ -113,6 +113,11 @@ namespace jaco {
             bool stop = false;
 
             ros::Rate r(100); // The loop below will run at 100Hz (every 4ms)
+            
+            // This loop finalizes the movement by checking angular distance
+            // of joints from the desired configuration. Instead of moving
+            // to the last waypoint, we move and check each joint separately
+            // to ensure we are at the right position.
             while (!stop) {
                 // Get the current real angles and normalize them for comparing
                 // with the target and adjusting the execution
@@ -178,12 +183,15 @@ namespace jaco {
                 // Adjust actuator velocities accordingly
                 arm_comm_.addTrajectoryPoint(point);
 
+                // Ensure execution at 100Hz
                 r.sleep();
             }
             
+            // If we got here, it seems that we succeeded
             action_server_.setSucceeded();
 
         } catch (const std::exception& e) {
+            // Something rather terrible has happened - report it!
             ROS_ERROR_STREAM(e.what());
             action_server_.setAborted();
         }
@@ -278,7 +286,7 @@ namespace jaco {
         ROS_INFO_STREAM(wp_info);
     }
     
-        /**
+    /**
      * Normalizes any number to an arbitrary range by assuming the range wraps 
      * around when going below min or above max.
      * 
