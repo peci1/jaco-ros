@@ -41,6 +41,7 @@
     <arg name="config" value="true"/>
   </include>
   
-  <include file="$(find jaco_moveit_config)/launch/default_warehouse_db.launch" />
+  <!-- If you use the MongoDB warehouse, uncomment the following line. -->
+  <!--include file="$(find jaco_moveit_config)/launch/default_warehouse_db.launch" /-->
 
 </launch>
