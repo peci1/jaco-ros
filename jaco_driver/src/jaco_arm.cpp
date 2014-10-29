@@ -29,6 +29,7 @@ JacoArm::JacoArm(JacoComm &arm, const ros::NodeHandle &nodeHandle)
     joint_state_publisher_ = node_handle_.advertise<sensor_msgs::JointState>("out/joint_state", 2);
     tool_position_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("out/tool_position", 2);
     finger_position_publisher_ = node_handle_.advertise<jaco_msgs::FingerPosition>("out/finger_position", 2);
+    current_publisher_ = node_handle_.advertise<jaco_msgs::JointAngles>("out/forces", 2);
 
     /* Set up Subscribers*/
     joint_velocity_subscriber_ = node_handle_.subscribe("in/joint_velocity", 1,
@@ -243,6 +244,25 @@ void JacoArm::publishJointAngles(void)
     joint_state_publisher_.publish(joint_state);
 }
 
+/*!
+ * \brief Publishes the current forces
+ */
+
+void JacoArm::publishForces(void)
+{
+    JacoAngles current_forces;
+    jaco_comm_.getForceAngularGravityFree(current_forces);
+    jaco_msgs::JointAngles jaco_forces = current_forces.constructAnglesMsg();
+
+    jaco_forces.joint1 = current_forces.Actuator1;
+    jaco_forces.joint2 = current_forces.Actuator2;
+    jaco_forces.joint3 = current_forces.Actuator3;
+    jaco_forces.joint4 = current_forces.Actuator4;
+    jaco_forces.joint5 = current_forces.Actuator5;
+    jaco_forces.joint6 = current_forces.Actuator6;
+    current_publisher_.publish(jaco_forces);
+}
+
 
 /*!
  * \brief Publishes the current cartesian coordinates
@@ -275,6 +295,7 @@ void JacoArm::statusTimer(const ros::TimerEvent&)
     publishJointAngles();
     publishToolPosition();
     publishFingerPosition();
+    publishForces();
 }
 
 }  // namespace jaco

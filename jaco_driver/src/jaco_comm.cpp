@@ -520,6 +520,29 @@ void JacoComm::getJointAngles(JacoAngles &angles)
 
 
 /*!
+ * \brief API call to obtain the forces.
+ */
+
+void JacoComm::getForceAngularGravityFree(JacoAngles &forces)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    AngularPosition jaco_angles;
+    memset(&jaco_angles, 0, sizeof(jaco_angles));  // zero structure
+
+    int result = jaco_api_.getAngularForceGravityFree(jaco_angles);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not get the force", result);
+    }
+    forces.Actuator1 = jaco_angles.Actuators.Actuator1;
+    forces.Actuator2 = jaco_angles.Actuators.Actuator2;
+    forces.Actuator3 = jaco_angles.Actuators.Actuator3;
+    forces.Actuator4 = jaco_angles.Actuators.Actuator4;
+    forces.Actuator5 = jaco_angles.Actuators.Actuator5;
+    forces.Actuator6 = jaco_angles.Actuators.Actuator6;
+}
+
+/*!
  * \brief API call to obtain the current cartesian position of the arm.
  */
 void JacoComm::getCartesianPosition(JacoPose &position)
