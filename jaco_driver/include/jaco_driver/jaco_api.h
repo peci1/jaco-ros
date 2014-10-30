@@ -37,7 +37,7 @@ class JacoAPI
 
     int (*getGeneralInformations)(GeneralInformations &);
     int (*getQuickStatus)(QuickStatus &);
-    // int (*GetForcesInfo)(ForcesInfo &);
+    int (*getForcesInfo)(ForcesInfo &);
 
     int (*getCodeVersion)(std::vector<int> &);
     int (*startControlAPI)();

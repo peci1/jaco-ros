@@ -29,7 +29,9 @@ JacoArm::JacoArm(JacoComm &arm, const ros::NodeHandle &nodeHandle)
     joint_state_publisher_ = node_handle_.advertise<sensor_msgs::JointState>("out/joint_state", 2);
     tool_position_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("out/tool_position", 2);
     finger_position_publisher_ = node_handle_.advertise<jaco_msgs::FingerPosition>("out/finger_position", 2);
-    current_publisher_ = node_handle_.advertise<jaco_msgs::JointAngles>("out/forces", 2);
+    force_angular_gravity_free_publisher_ = node_handle_.advertise<jaco_msgs::JointAngles>("out/forces_angular_gf", 2);
+    force_cartesian_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("out/forces_cartesian", 2);
+    //forces_info_publisher_ = node_handle_.advertise<jaco_msgs::ForcesInfo>("out/forces_info", 2);
 
     /* Set up Subscribers*/
     joint_velocity_subscriber_ = node_handle_.subscribe("in/joint_velocity", 1,
@@ -260,7 +262,21 @@ void JacoArm::publishForces(void)
     jaco_forces.joint4 = current_forces.Actuator4;
     jaco_forces.joint5 = current_forces.Actuator5;
     jaco_forces.joint6 = current_forces.Actuator6;
-    current_publisher_.publish(jaco_forces);
+
+    JacoPose pose;
+    geometry_msgs::PoseStamped cartesian_force;
+
+    jaco_comm_.getForceCartesian(pose);
+    cartesian_force.pose.position.x = pose.X;
+    cartesian_force.pose.position.y = pose.Y;
+    cartesian_force.pose.position.z = pose.Z;
+
+    ForcesInfo forces_info;
+    jaco_comm_.getForcesInfo(forces_info);
+
+    force_angular_gravity_free_publisher_.publish(jaco_forces);
+    force_cartesian_publisher_.publish(cartesian_force);
+
 }
 
 

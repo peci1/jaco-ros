@@ -518,9 +518,8 @@ void JacoComm::getJointAngles(JacoAngles &angles)
     angles = JacoAngles(jaco_angles.Actuators);
 }
 
-
 /*!
- * \brief API call to obtain the forces.
+ * \brief API call to obtain the angular gravity free forces.
  */
 
 void JacoComm::getForceAngularGravityFree(JacoAngles &forces)
@@ -540,6 +539,37 @@ void JacoComm::getForceAngularGravityFree(JacoAngles &forces)
     forces.Actuator4 = jaco_angles.Actuators.Actuator4;
     forces.Actuator5 = jaco_angles.Actuators.Actuator5;
     forces.Actuator6 = jaco_angles.Actuators.Actuator6;
+}
+
+/*!
+ * \brief API call to obtain the cartesian forces.
+ */
+
+void JacoComm::getForceCartesian(JacoPose &force)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    CartesianPosition jaco_cartesian_force;
+    memset(&jaco_cartesian_force, 0, sizeof(jaco_cartesian_force));  // zero structure
+
+    int result = jaco_api_.getCartesianForce(jaco_cartesian_force);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not get the Cartesian Force", result);
+    }
+    force = JacoPose(jaco_cartesian_force.Coordinates);
+}
+
+void JacoComm::getForcesInfo(ForcesInfo &forces_info)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    memset(&forces_info, 0, sizeof(forces_info));  // zero structure
+
+    int result = jaco_api_.getForcesInfo(forces_info);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not get the forces info", result);
+    }
+    printf("ForcesInfo: \n actuators: %f %f %f %f %f %f \n XYZ: %f %f %f \n ThetaXYZ: %f %f %f \n",forces_info.Actuator1,forces_info.Actuator2,forces_info.Actuator3,forces_info.Actuator4,forces_info.Actuator5,forces_info.Actuator6,forces_info.X,forces_info.Y,forces_info.Z,forces_info.ThetaX,forces_info.ThetaY,forces_info.ThetaZ);
 }
 
 /*!

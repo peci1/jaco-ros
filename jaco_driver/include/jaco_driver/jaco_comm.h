@@ -80,6 +80,8 @@ class JacoComm
     void getQuickStatus(QuickStatus &quick_status);
     void getConfig(ClientConfigurations &config);
     void getForceAngularGravityFree(JacoAngles &angles);
+    void getForceCartesian(JacoPose &position);
+    void getForcesInfo(ForcesInfo &forces_info);
     void printAngles(const JacoAngles &angles);
     void printPosition(const JacoPose &position);
     void printFingers(const FingersPosition &fingers);
