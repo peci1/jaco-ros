@@ -281,6 +281,8 @@ void JacoArm::publishForces(void)
     wrench_forces.wrench.torque.x = forces_info.ThetaX;
     wrench_forces.wrench.torque.y = forces_info.ThetaY;
     wrench_forces.wrench.torque.z = forces_info.ThetaZ;
+    wrench_forces.header.stamp = ros::Time().now();
+    wrench_forces.header.frame_id = "jaco_link_hand";
 
     force_angular_gravity_free_publisher_.publish(jaco_forces);
     force_cartesian_publisher_.publish(cartesian_force);
