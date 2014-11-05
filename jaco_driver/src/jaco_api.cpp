@@ -51,6 +51,8 @@ JacoAPI::JacoAPI(void)
 
     getAngularForce = (int (*)(AngularPosition &))checkApiInit(usbLib, "GetAngularForce");
 
+    getForcesInfo = (int (*)(ForcesInfo &))checkApiInit(usbLib, "GetForcesInfo");
+
     getAngularCurrent = (int (*)(AngularPosition &))checkApiInit(usbLib, "GetAngularCurrent");
 
     getActualTrajectoryInfo = (int (*)(TrajectoryPoint &))checkApiInit(usbLib, "GetActualTrajectoryInfo");
@@ -92,6 +94,8 @@ JacoAPI::JacoAPI(void)
     getPositionCurrentActuators = (int (*)(std::vector<float> &))checkApiInit(usbLib, "GetPositionCurrentActuators");
 
     setActuatorPID = (int (*)(unsigned int, float, float, float))checkApiInit(usbLib, "SetActuatorPID");
+
+    getAngularForceGravityFree = (int (*)(AngularPosition &))checkApiInit(usbLib, "GetAngularForceGravityFree");
 }
 
 }  // namespace jaco
