@@ -569,7 +569,7 @@ void JacoComm::getForcesInfo(ForcesInfo &forces_info)
     {
         throw JacoCommException("Could not get the forces info", result);
     }
-    printf("ForcesInfo: \n actuators: %f %f %f %f %f %f \n XYZ: %f %f %f \n ThetaXYZ: %f %f %f \n",forces_info.Actuator1,forces_info.Actuator2,forces_info.Actuator3,forces_info.Actuator4,forces_info.Actuator5,forces_info.Actuator6,forces_info.X,forces_info.Y,forces_info.Z,forces_info.ThetaX,forces_info.ThetaY,forces_info.ThetaZ);
+
 }
 
 /*!

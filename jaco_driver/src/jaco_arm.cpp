@@ -31,7 +31,7 @@ JacoArm::JacoArm(JacoComm &arm, const ros::NodeHandle &nodeHandle)
     finger_position_publisher_ = node_handle_.advertise<jaco_msgs::FingerPosition>("out/finger_position", 2);
     force_angular_gravity_free_publisher_ = node_handle_.advertise<jaco_msgs::JointAngles>("out/forces_angular_gf", 2);
     force_cartesian_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("out/forces_cartesian", 2);
-    //forces_info_publisher_ = node_handle_.advertise<jaco_msgs::ForcesInfo>("out/forces_info", 2);
+    forces_info_publisher_ = node_handle_.advertise<geometry_msgs::WrenchStamped>("out/forces_info", 2);
 
     /* Set up Subscribers*/
     joint_velocity_subscriber_ = node_handle_.subscribe("in/joint_velocity", 1,
@@ -274,11 +274,18 @@ void JacoArm::publishForces(void)
     ForcesInfo forces_info;
     jaco_comm_.getForcesInfo(forces_info);
 
+    geometry_msgs::WrenchStamped wrench_forces;
+    wrench_forces.wrench.force.x = forces_info.X;
+    wrench_forces.wrench.force.y = forces_info.Y;
+    wrench_forces.wrench.force.z = forces_info.Z;
+    wrench_forces.wrench.torque.x = forces_info.ThetaX;
+    wrench_forces.wrench.torque.y = forces_info.ThetaY;
+    wrench_forces.wrench.torque.z = forces_info.ThetaZ;
+
     force_angular_gravity_free_publisher_.publish(jaco_forces);
     force_cartesian_publisher_.publish(cartesian_force);
-
+    forces_info_publisher_.publish(wrench_forces);
 }
-
 
 /*!
  * \brief Publishes the current cartesian coordinates
