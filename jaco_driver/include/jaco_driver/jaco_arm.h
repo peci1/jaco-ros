@@ -13,6 +13,7 @@
 #include <ros/ros.h>
 
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/WrenchStamped.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <geometry_msgs/WrenchStamped.h>
 #include <tf/tf.h>
@@ -25,6 +26,7 @@
 #include <jaco_msgs/JointVelocity.h>
 #include <jaco_msgs/FingerPosition.h>
 #include <jaco_msgs/JointAngles.h>
+#include <jaco_msgs/SetForceControlParams.h>
 
 #include <time.h>
 #include <math.h>
@@ -38,6 +40,9 @@
 namespace jaco
 {
 
+// Maximum number of joints on Jaco-like robots:
+static const int     JACO_JOINTS_COUNT = 9;
+
 class JacoArm
 {
  public:
@@ -50,6 +55,13 @@ class JacoArm
     bool stopServiceCallback(jaco_msgs::Stop::Request &req, jaco_msgs::Stop::Response &res);
     bool startServiceCallback(jaco_msgs::Start::Request &req, jaco_msgs::Start::Response &res);
     bool homeArmServiceCallback(jaco_msgs::HomeArm::Request &req, jaco_msgs::HomeArm::Response &res);
+    
+    bool setForceControlParamsCallback(jaco_msgs::SetForceControlParams::Request &req,
+                                       jaco_msgs::SetForceControlParams::Response &res);
+    bool startForceControlCallback(jaco_msgs::Start::Request &req,
+                                   jaco_msgs::Start::Response &res);
+    bool stopForceControlCallback(jaco_msgs::Stop::Request &req,
+                                  jaco_msgs::Stop::Response &res);
 
  private:
     void positionTimer(const ros::TimerEvent&);
@@ -59,7 +71,8 @@ class JacoArm
 
     void publishJointAngles(void);
     void publishToolPosition(void);
-    void publishFingerPosition(void);    
+    void publishToolWrench(void);
+    void publishFingerPosition(void);
     void publishForces(void);
 
     tf::TransformListener tf_listener_;
@@ -72,6 +85,7 @@ class JacoArm
 
     ros::Publisher joint_angles_publisher_;
     ros::Publisher tool_position_publisher_;
+    ros::Publisher tool_wrench_publisher_;
     ros::Publisher finger_position_publisher_;
     ros::Publisher joint_state_publisher_;
     ros::Publisher force_angular_gravity_free_publisher_;
@@ -81,6 +95,10 @@ class JacoArm
     ros::ServiceServer stop_service_;
     ros::ServiceServer start_service_;
     ros::ServiceServer homing_service_;
+
+    ros::ServiceServer set_force_control_params_service_;
+    ros::ServiceServer start_force_control_service_;
+    ros::ServiceServer stop_force_control_service_;
 
     // Timers for control loops
     ros::Timer status_timer_;
@@ -93,6 +111,9 @@ class JacoArm
     double cartesian_vel_timeout_seconds_;
     double joint_vel_interval_seconds_;
     double cartesian_vel_interval_seconds_;
+    std::string tf_prefix_;
+    double finger_conv_ratio_;
+    bool convert_joint_velocities_;
 
     // State tracking or utility members
     bool cartesian_vel_timer_flag_;
@@ -103,6 +124,8 @@ class JacoArm
 
     ros::Time last_joint_vel_cmd_time_;
     ros::Time last_cartesian_vel_cmd_time_;
+
+    std::vector< std::string > joint_names_;
 };
 
 }  // namespace jaco

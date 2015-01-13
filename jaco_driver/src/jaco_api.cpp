@@ -47,7 +47,17 @@ JacoAPI::JacoAPI(void)
 
     getAngularPosition = (int (*)(AngularPosition &))checkApiInit(usbLib, "GetAngularPosition");
 
+    getAngularVelocity = (int (*)(AngularPosition &))checkApiInit(usbLib, "GetAngularVelocity");
+
     getCartesianForce = (int (*)(CartesianPosition &))checkApiInit(usbLib, "GetCartesianForce");
+
+    setCartesianForceMinMax = (int (*)(CartesianInfo, CartesianInfo))checkApiInit(usbLib, "SetCartesianForceMinMax");
+
+    setCartesianInertiaDamping = (int (*)(CartesianInfo, CartesianInfo))checkApiInit(usbLib, "SetCartesianInertiaDamping");
+
+    startForceControl = (int (*)())checkApiInit(usbLib, "StartForceControl");
+
+    stopForceControl = (int (*)())checkApiInit(usbLib, "StopForceControl");
 
     getAngularForce = (int (*)(AngularPosition &))checkApiInit(usbLib, "GetAngularForce");
 

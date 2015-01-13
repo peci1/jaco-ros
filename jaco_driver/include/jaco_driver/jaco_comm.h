@@ -79,8 +79,15 @@ class JacoComm
     void setConfig(const ClientConfigurations &config);
     void sendJoystickCommand(const JoystickCommand &command);
     void getJointAngles(JacoAngles &angles);
+    void getJointVelocities(JacoAngles &vels);
+    void getJointTorques(JacoAngles &tqs);
     void getCartesianPosition(JacoPose &position);
+    void getCartesianForce(JacoPose &position);
     void getFingerPositions(FingerAngles &fingers);
+    void setCartesianInertiaDamping(const CartesianInfo &inertia, const CartesianInfo& damping);
+    void setCartesianForceMinMax(const CartesianInfo &min, const CartesianInfo& max);
+    void startForceControl();
+    void stopForceControl();
     void getQuickStatus(QuickStatus &quick_status);
     void getConfig(ClientConfigurations &config);
     void getForceAngularGravityFree(JacoAngles &angles);
@@ -94,12 +101,14 @@ class JacoComm
     void startAPI();
     bool isStopped();
     int numFingers();
+    int robotType();
 
  private:
     boost::recursive_mutex& api_mutex_;
     jaco::JacoAPI jaco_api_;
     bool is_software_stop_;
     int num_fingers_;
+    int robot_type_; 
 };
 
 }  // namespace jaco
