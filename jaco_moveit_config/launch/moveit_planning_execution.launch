@@ -1,6 +1,7 @@
 <launch>
   <!-- The planning and execution components of MoveIt! configured to run -->
   <!-- using the ROS-Industrial interface. -->
+  <remap from="/joint_states" to="/jaco_arm_driver/out/joint_state" />
 
   <arg name="sim_time" default="false" />
   <param name="/use_sim_time" value="$(arg sim_time)"/>
