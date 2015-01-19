@@ -42,7 +42,6 @@ namespace jaco {
 
             trajectory_msgs::JointTrajectoryPoint goal_waypoint =
                     goal->trajectory.points[goal->trajectory.points.size() - 1];
-
             JacoAngles current_joint_angles, goal_joint_angles;
             goal_joint_angles.Actuator1 = goal_waypoint.positions[0] * (180 / PI);
             goal_joint_angles.Actuator2 = goal_waypoint.positions[1] * (180 / PI);
