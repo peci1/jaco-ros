@@ -69,7 +69,6 @@ JacoArm::JacoArm(JacoComm &arm, const ros::NodeHandle &nodeHandle)
     force_angular_gravity_free_publisher_ = node_handle_.advertise<jaco_msgs::JointAngles>("out/forces_angular_gf", 2);
     force_cartesian_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("out/forces_cartesian", 2);
     forces_info_publisher_ = node_handle_.advertise<geometry_msgs::WrenchStamped>("out/forces_info", 2);
-    forces_info_publisher2_ = node_handle_.advertise<geometry_msgs::WrenchStamped>("out/forces_info_base", 2);
     /* Set up Subscribers*/
     joint_velocity_subscriber_ = node_handle_.subscribe("in/joint_velocity", 1,
                                                       &JacoArm::jointVelocityCallback, this);
@@ -438,9 +437,8 @@ void JacoArm::publishForces(void)
         ROS_ERROR("%s",ex.what());
         ros::Duration(1.0).sleep();
     }
-    double roll, pitch, yaw;
+
     tf::Matrix3x3 rotation = tf::Matrix3x3(transform.getRotation());
-   
     geometry_msgs::WrenchStamped wrench_forces;
     wrench_forces.wrench.force.x = forces_info.X*rotation[0][0] + forces_info.Y*rotation[0][1] + forces_info.Z*rotation[0][2];
     wrench_forces.wrench.force.y = forces_info.X*rotation[1][0] + forces_info.Y*rotation[1][1] + forces_info.Z*rotation[1][2];
@@ -451,16 +449,8 @@ void JacoArm::publishForces(void)
     wrench_forces.header.stamp = ros::Time().now();
     wrench_forces.header.frame_id = "jaco_link_hand";
 
-    //force_angular_gravity_free_publisher_.publish(jaco_forces);
     force_cartesian_publisher_.publish(cartesian_force);
     forces_info_publisher_.publish(wrench_forces);
-    wrench_forces.wrench.force.x = forces_info.X;
-    wrench_forces.wrench.force.y = forces_info.Y;
-    wrench_forces.wrench.force.z = forces_info.Z;
-    wrench_forces.header.frame_id = "jaco_link_base";
-
-    forces_info_publisher2_.publish(wrench_forces);
-
 }
 
 /*!
