@@ -31,11 +31,10 @@
   <!--   - this typically includes: robot_state, motion_interface, and joint_trajectory_action nodes -->
   <!--   - replace these calls with appropriate robot-specific calls or launch files -->
   <group unless="$(arg sim)">
-    <include file="$(find jaco_driver)/launch/jaco_arm.launch" />
+    <include file="$(find jaco_driver)/launch/jaco_arm.launch">
+      <arg name="use_urdf" value="true"/>
+    </include>
   </group>
-
-  <!-- publish the robot state (tf transforms) -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <include file="$(find jaco_moveit_config)/launch/move_group.launch">
     <arg name="publish_monitored_planning_scene" value="true" />
