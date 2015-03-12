@@ -113,14 +113,25 @@ JacoComm::JacoComm(const ros::NodeHandle& node_handle,
             QuickStatus quick_status;
             getQuickStatus(quick_status);
 
-            if ((quick_status.RobotType != 0) && (quick_status.RobotType != 1))
+            robot_type_ = quick_status.RobotType;
+            if ((robot_type_ != 0) && (robot_type_ != 1) && (robot_type_ != 3))
             {
                 ROS_ERROR("Could not get the type of the arm from the quick status, expected "
                           "either type 0 (JACO), or type 1 (MICO), got %d", quick_status.RobotType);
                 throw JacoCommException("Could not get the type of the arm", quick_status.RobotType);
             }
 
-            num_fingers_ = quick_status.RobotType == 0 ? 3 : 2;
+            switch (robot_type_) {
+                case 0:
+                case 3:
+                    num_fingers_ = 3;
+                    break;
+                case 1:
+                    num_fingers_ = 2;
+                    break;
+                default:
+                    break;
+            }
 
             ROS_INFO_STREAM("Found " << devices_list.size() << " device(s), using device at index " << device_i
                             << " (model: " << configuration.Model
@@ -328,7 +339,7 @@ void JacoComm::setJointAngles(const JacoAngles &angles, int timeout, bool push)
         }
     }
 
-    startAPI();
+    //startAPI();
 
     result = jaco_api_.setAngularControl();
     if (result != NO_ERROR_KINOVA)
@@ -377,7 +388,7 @@ void JacoComm::setCartesianPosition(const JacoPose &position, int timeout, bool 
         }
     }
 
-    startAPI();
+    //startAPI();
 
     result = jaco_api_.setCartesianControl();
     if (result != NO_ERROR_KINOVA)
@@ -434,7 +445,7 @@ void JacoComm::setFingerPositions(const FingerAngles &fingers, int timeout, bool
         }
     }
 
-    startAPI();
+    //startAPI();
 
     result = jaco_api_.setCartesianControl();
     if (result != NO_ERROR_KINOVA)
@@ -486,7 +497,7 @@ void JacoComm::setJointVelocities(const AngularInfo &joint_vel)
 
     memset(&jaco_velocity, 0, sizeof(jaco_velocity));  // zero structure
 
-    startAPI();
+    //startAPI();
     jaco_velocity.Position.Type = ANGULAR_VELOCITY;
 
     // confusingly, velocity is passed in the position struct
@@ -519,7 +530,7 @@ void JacoComm::setCartesianVelocities(const CartesianInfo &velocities)
 
     memset(&jaco_velocity, 0, sizeof(jaco_velocity));  // zero structure
 
-    startAPI();
+    //startAPI();
     jaco_velocity.Position.Type = CARTESIAN_VELOCITY;
 
     // confusingly, velocity is passed in the position struct
@@ -586,7 +597,41 @@ void JacoComm::getJointAngles(JacoAngles &angles)
     angles = JacoAngles(jaco_angles.Actuators);
 }
 
+/*!
+ * \brief API call to obtain the current angular velocities of all the joints.
+ */
+void JacoComm::getJointVelocities(JacoAngles &vels)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    AngularPosition jaco_vels;
+    memset(&jaco_vels, 0, sizeof(jaco_vels));  // zero structure
 
+    int result = jaco_api_.getAngularVelocity(jaco_vels);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not get the angular velocity", result);
+    }
+
+    vels = JacoAngles(jaco_vels.Actuators);
+}
+
+/*!
+ * \brief API call to obtain the current torque of all the joints.
+ */
+void JacoComm::getJointTorques(JacoAngles &tqs)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    AngularPosition jaco_tqs;
+    memset(&jaco_tqs, 0, sizeof(jaco_tqs));  // zero structure
+
+    int result = jaco_api_.getAngularForce(jaco_tqs);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not get the joint torques", result);
+    }
+
+    tqs = JacoAngles(jaco_tqs.Actuators);
+}
 /*!
  * \brief API call to obtain the current cartesian position of the arm.
  */
@@ -605,6 +650,23 @@ void JacoComm::getCartesianPosition(JacoPose &position)
     position = JacoPose(jaco_cartesian_position.Coordinates);
 }
 
+/*!
+ * \brief API call to obtain the current cartesian force of the arm.
+ */
+void JacoComm::getCartesianForce(JacoPose &cart_force)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    CartesianPosition jaco_cartesian_force;
+    memset(&jaco_cartesian_force, 0, sizeof(jaco_cartesian_force));  // zero structure
+
+    int result = jaco_api_.getCartesianForce(jaco_cartesian_force);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not get the Cartesian force", result);
+    }
+
+    cart_force = JacoPose(jaco_cartesian_force.Coordinates);
+}
 
 /*!
  * \brief API call to obtain the current finger positions.
@@ -629,6 +691,57 @@ void JacoComm::getFingerPositions(FingerAngles &fingers)
     fingers = FingerAngles(jaco_cartesian_position.Fingers);
 }
 
+/*!
+ * \brief Set the cartesian inertia and damping parameters for force control.
+ */
+void JacoComm::setCartesianInertiaDamping(const CartesianInfo &inertia, const CartesianInfo& damping)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    int result = jaco_api_.setCartesianInertiaDamping(inertia, damping);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not set cartesian inertia and damping", result);
+    }
+}
+
+/*!
+ * \brief Set the cartesian min and max force parameters for force control.
+ */
+void JacoComm::setCartesianForceMinMax(const CartesianInfo &min, const CartesianInfo& max)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    int result = jaco_api_.setCartesianForceMinMax(min, max);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not set cartesian min/max force.", result);
+    }
+}
+
+/*!
+ * \brief Start cartesian force control.
+ */
+void JacoComm::startForceControl()
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    int result = jaco_api_.startForceControl();
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not start force control.", result);
+    }
+}
+
+/*!
+ * \brief Stop cartesian force control.
+ */
+void JacoComm::stopForceControl()
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    int result = jaco_api_.stopForceControl();
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw JacoCommException("Could not stop force control.", result);
+    }
+}
 
 /*!
  * \brief API call to obtain the current client configuration.
@@ -703,6 +816,10 @@ int JacoComm::numFingers()
     return num_fingers_;
 }
 
+int JacoComm::robotType()
+{
+    return robot_type_;
+}
 
 /*!
  * \brief Dumps the current joint angles onto the screen.

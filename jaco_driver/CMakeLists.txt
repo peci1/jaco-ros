@@ -22,7 +22,7 @@ catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES jaco_driver
   CATKIN_DEPENDS actionlib actionlib_msgs geometry_msgs jaco_msgs roscpp rospy sensor_msgs std_msgs tf
-  #DEPENDS libdl
+#  DEPENDS system_lib
 )
 
 ###########
@@ -50,20 +50,16 @@ add_executable(jaco_arm_driver
   src/jaco_arm.cpp
   src/jaco_comm.cpp
   src/jaco_pose_action.cpp
-  src/jaco_trajectory_action.cpp
   src/jaco_angles_action.cpp
   src/jaco_fingers_action.cpp
   src/jaco_types.cpp
-  src/joystick_command_translator.cpp
   include/jaco_driver/jaco_angles_action.h
   include/jaco_driver/jaco_api.h
   include/jaco_driver/jaco_arm.h
   include/jaco_driver/jaco_comm.h
   include/jaco_driver/jaco_fingers_action.h
   include/jaco_driver/jaco_pose_action.h
-  include/jaco_driver/jaco_trajectory_action.h
   include/jaco_driver/jaco_types.h
-  include/jaco_driver/joystick_command_translator.h
   include/kinova/Kinova.API.CommLayerUbuntu.h
   include/kinova/Kinova.API.UsbCommandLayerUbuntu.h
   include/kinova/KinovaTypes.h
@@ -79,8 +75,8 @@ add_executable(jaco_tf_updater
 add_dependencies(jaco_arm_driver ${catkin_EXPORTED_TARGETS})
 add_dependencies(jaco_tf_updater ${catkin_EXPORTED_TARGETS})
 
-target_link_libraries(jaco_arm_driver ${catkin_LIBRARIES} -ldl)
-target_link_libraries(jaco_tf_updater ${catkin_LIBRARIES} -ldl)
+target_link_libraries(jaco_arm_driver ${catkin_LIBRARIES} dl)
+target_link_libraries(jaco_tf_updater ${catkin_LIBRARIES})
 
 #############
 ## Install ##
