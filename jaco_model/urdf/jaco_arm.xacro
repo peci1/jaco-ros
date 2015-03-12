@@ -42,10 +42,6 @@
   <property name="joint_1_axis_xyz" value="0 0 -1" />
   <property name="joint_1_origin_xyz" value="0 0 0.1535" />
   <property name="joint_1_origin_rpy" value="${J_PI} 0 ${J_PI}" />
-  <property name="joint_1_limit_effort" value="30" />
-  <property name="joint_1_limit_velocity" value="0.83" />
-  <property name="joint_1_limit_lower" value="-3.14159265359" />
-  <property name="joint_1_limit_upper" value="3.14159265359" />
   <property name="joint_1_lower_limit" value="${-2*J_PI}" />
   <property name="joint_1_upper_limit" value="${2*J_PI}" />
 
@@ -53,11 +49,6 @@
   <property name="joint_2_axis_xyz" value="0 0 1" />
   <property name="joint_2_origin_xyz" value="0 0 -0.1185" />
   <property name="joint_2_origin_rpy" value="-${J_PI/2} ${J_PI} 0" />
-  <property name="joint_2_limit_effort" value="30" />
-  <property name="joint_2_limit_velocity" value="0.83" />
-  <property name="joint_2_limit_lower" value="-3.89208423195" />
-  <property name="joint_2_limit_upper" value="0.75049157835" />
-
   <property name="joint_2_lower_limit" value="${-J_PI}" />
   <property name="joint_2_upper_limit" value="${0}" />
 
@@ -65,11 +56,6 @@
   <property name="joint_3_axis_xyz" value="0 0 -1" />
   <property name="joint_3_origin_xyz" value="0.41 0 0" />
   <property name="joint_3_origin_rpy" value="${J_PI} 0 ${J_PI/2}" />
-  <property name="joint_3_limit_effort" value="30" />
-  <property name="joint_3_limit_velocity" value="0.83" />
-  <property name="joint_3_limit_lower" value="-4.38077642251" />
-  <property name="joint_3_limit_upper" value="1.23918376892" />
-
   <property name="joint_3_lower_limit" value="${-5*J_PI/4}" />
   <property name="joint_3_upper_limit" value="${1*J_PI/4}" />
 
@@ -77,11 +63,6 @@
   <property name="joint_4_axis_xyz" value="0 0 -1" />
   <property name="joint_4_origin_xyz" value="0.207 0 -0.01125" />
   <property name="joint_4_origin_rpy" value="${J_PI} ${J_PI/2} 0" />
-  <property name="joint_4_limit_effort" value="30" />
-  <property name="joint_4_limit_velocity" value="0.83" />
-  <property name="joint_4_limit_lower" value="-3.14159265359" />
-  <property name="joint_4_limit_upper" value="3.14159265359" />
-
   <property name="joint_4_lower_limit" value="${-2*J_PI}" />
   <property name="joint_4_upper_limit" value="${2*J_PI}" />
 
@@ -89,11 +70,6 @@
   <property name="joint_5_axis_xyz" value="0 0 -1" />
   <property name="joint_5_origin_xyz" value="0.0343 0 -0.06588" />
   <property name="joint_5_origin_rpy" value="0 -${J_PI/180*55} 0" />
-  <property name="joint_5_limit_effort" value="30" />
-  <property name="joint_5_limit_velocity" value="0.83" />
-  <property name="joint_5_limit_lower" value="-3.14159265359" />
-  <property name="joint_5_limit_upper" value="3.14159265359" />
-
   <property name="joint_5_lower_limit" value="${-2*J_PI}" />
   <property name="joint_5_upper_limit" value="${2*J_PI}" />
 
@@ -101,11 +77,6 @@
   <property name="joint_6_axis_xyz" value="0 0 -1" />
   <property name="joint_6_origin_xyz" value="0.0343 0 -0.06588" />
   <property name="joint_6_origin_rpy" value="-${J_PI/180*55} 0 ${J_PI/2}" />
-  <property name="joint_6_limit_effort" value="30" />
-  <property name="joint_6_limit_velocity" value="0.83" />
-  <property name="joint_6_limit_lower" value="-1.74532925199" />
-  <property name="joint_6_limit_upper" value="4.53785605519" />
-
   <property name="joint_6_lower_limit" value="${-2*J_PI}" />
   <property name="joint_6_upper_limit" value="${2*J_PI}" />
 
