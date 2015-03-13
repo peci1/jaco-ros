@@ -60,7 +60,7 @@
 
     <xacro:macro name="jaco_struct" params="parent basename">
         <xacro:jaco_link link_name="${link_base}"/>
-        <xacro:jaco_joint joint_name="${joint_base}" type="fixed" parent="${parent}" child="${link_base}" joint_axis_xyz="${joint_base_axis_xyz}" joint_origin_xyz="${joint_base_origin_xyz}" joint_origin_rpy="${joint_base_origin_rpy}" joint_lower_limit="0" joint_upper_limit="0"/>
+        <!--xacro:jaco_joint joint_name="${joint_base}" type="fixed" parent="${parent}" child="${link_base}" joint_axis_xyz="${joint_base_axis_xyz}" joint_origin_xyz="${joint_base_origin_xyz}" joint_origin_rpy="${joint_base_origin_rpy}" joint_lower_limit="0" joint_upper_limit="0"/-->
         <xacro:jaco_link link_name="${link_1}"/>
         <xacro:jaco_joint joint_name="${joint_1}" type="continuous" parent="${link_base}" child="${link_1}" joint_axis_xyz="${joint_1_axis_xyz}" joint_origin_xyz="${joint_1_origin_xyz}" joint_origin_rpy="${joint_1_origin_rpy}" joint_lower_limit="${joint_1_lower_limit}" joint_upper_limit="${joint_1_upper_limit}"/>
         <xacro:jaco_link link_name="${link_2}"/>
@@ -79,21 +79,6 @@
          <child link="${api_origin}"/>
          <origin xyz="0 0 ${api_offset}" rpy="0 0 0" />
        </joint>
-       <link name="${api_origin}">
-         <!--
-         <visual>
-           <geometry>
-             <box xyz="0 0 0" size="0.1 0.1 0.1"/>
-           </geometry>
-         </visual>
-         <collision>
-           <geometry>
-             <box xyz="0 0 0" size="0.1 0.1 0.1"/>
-           </geometry>
-         </collision>
-         -->
-        </link>
-
         <joint name="${link_hand}_to_end_effector" type="fixed">
           <parent link="${link_hand}"/>
           <child link="${link_end_effector}"/>

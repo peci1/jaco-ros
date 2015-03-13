@@ -1,9 +1,8 @@
 <launch>
   <!-- The planning and execution components of MoveIt! configured to run -->
   <!-- using the ROS-Industrial interface. -->
-  <remap from="/joint_states" to="/jaco_arm_driver/out/joint_state" />
 
-  <remap from="joint_states" to="jaco_joint_states" />
+  <remap from="joint_states" to="jaco_arm_driver/out/joint_state" />
 
   <arg name="sim_time" default="false" />
   <param name="/use_sim_time" value="$(arg sim_time)"/>
@@ -33,13 +32,12 @@
   <!--   - this typically includes: robot_state, motion_interface, and joint_trajectory_action nodes -->
   <!--   - replace these calls with appropriate robot-specific calls or launch files -->
   <group unless="$(arg sim)">
+    <arg name="use_urdf" value="true" />
     <include file="$(find jaco_driver)/launch/jaco_arm.launch" />
   </group>
 
   <!-- publish the robot state (tf transforms) -->
-  <node name="jaco_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-    <arg name="robot_description" value="jaco_robot_description" />
-  </node>
+  <node name="jaco_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
   <include file="$(find jaco_moveit_config)/launch/move_group.launch">
     <arg name="publish_monitored_planning_scene" value="true" />

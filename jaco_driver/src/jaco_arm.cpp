@@ -401,59 +401,6 @@ void JacoArm::publishJointAngles(void)
 }
 
 /*!
- * \brief Publishes the current forces
- */
-
-void JacoArm::publishForces(void)
-{
-    JacoAngles current_forces;
-    jaco_comm_.getForceAngularGravityFree(current_forces);
-    jaco_msgs::JointAngles jaco_forces = current_forces.constructAnglesMsg();
-
-    jaco_forces.joint1 = current_forces.Actuator1;
-    jaco_forces.joint2 = current_forces.Actuator2;
-    jaco_forces.joint3 = current_forces.Actuator3;
-    jaco_forces.joint4 = current_forces.Actuator4;
-    jaco_forces.joint5 = current_forces.Actuator5;
-    jaco_forces.joint6 = current_forces.Actuator6;
-
-    JacoPose pose;
-    geometry_msgs::PoseStamped cartesian_force;
-
-    jaco_comm_.getForceCartesian(pose);
-    cartesian_force.pose.position.x = pose.X;
-    cartesian_force.pose.position.y = pose.Y;
-    cartesian_force.pose.position.z = pose.Z;
-
-    ForcesInfo forces_info;
-    jaco_comm_.getForcesInfo(forces_info);
-    tf::StampedTransform transform;
-    ros::Time time = ros::Time().now();
-    try{
-        tf_listener_.waitForTransform("/jaco_link_hand", "/jaco_link_base",time, ros::Duration(3.0));
-        tf_listener_.lookupTransform("/jaco_link_hand", "/jaco_link_base",time,transform);
-    }
-    catch(tf::TransformException ex){
-        ROS_ERROR("%s",ex.what());
-        ros::Duration(1.0).sleep();
-    }
-
-    tf::Matrix3x3 rotation = tf::Matrix3x3(transform.getRotation());
-    geometry_msgs::WrenchStamped wrench_forces;
-    wrench_forces.wrench.force.x = forces_info.X*rotation[0][0] + forces_info.Y*rotation[0][1] + forces_info.Z*rotation[0][2];
-    wrench_forces.wrench.force.y = forces_info.X*rotation[1][0] + forces_info.Y*rotation[1][1] + forces_info.Z*rotation[1][2];
-    wrench_forces.wrench.force.z = forces_info.X*rotation[2][0] + forces_info.Y*rotation[2][1] + forces_info.Z*rotation[2][2];
-    wrench_forces.wrench.torque.x = forces_info.ThetaX;
-    wrench_forces.wrench.torque.y = forces_info.ThetaY;
-    wrench_forces.wrench.torque.z = forces_info.ThetaZ;
-    wrench_forces.header.stamp = ros::Time().now();
-    wrench_forces.header.frame_id = "jaco_link_hand";
-
-    force_cartesian_publisher_.publish(cartesian_force);
-    forces_info_publisher_.publish(wrench_forces);
-}
-
-/*!
  * \brief Publishes the current cartesian coordinates
  */
 void JacoArm::publishToolPosition(void)
