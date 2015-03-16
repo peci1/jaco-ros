@@ -459,7 +459,6 @@ void JacoArm::statusTimer(const ros::TimerEvent&)
     publishToolPosition();
     publishToolWrench();
     publishFingerPosition();
-    publishForces();
 }
 
 }  // namespace jaco
