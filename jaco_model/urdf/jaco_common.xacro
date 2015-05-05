@@ -111,6 +111,21 @@
          <child link="${api_origin}"/>
          <origin xyz="0 0 ${api_offset}" rpy="0 0 0" />
        </joint>
+       <link name="${api_origin}">
+         <!--
+         <visual>
+           <geometry>
+             <box xyz="0 0 0" size="0.1 0.1 0.1"/>
+           </geometry>
+         </visual>
+         <collision>
+           <geometry>
+             <box xyz="0 0 0" size="0.1 0.1 0.1"/>
+           </geometry>
+         </collision>
+         -->
+        </link>
+
         <joint name="${link_hand}_to_end_effector" type="fixed">
           <parent link="${link_hand}"/>
           <child link="${link_end_effector}"/>
