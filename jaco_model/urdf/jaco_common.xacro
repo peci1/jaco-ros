@@ -80,7 +80,7 @@
         <xacro:jaco_link link_name="${link_base}">
             <xacro:insert_block name="link_base_link_data" />
         </xacro:jaco_link>
-        <!--xacro:jaco_joint joint_name="${joint_base}" type="fixed" parent="${parent}" child="${link_base}" joint_axis_xyz="${joint_base_axis_xyz}" joint_origin_xyz="${joint_base_origin_xyz}" joint_origin_rpy="${joint_base_origin_rpy}" joint_lower_limit="0" joint_upper_limit="0"/-->
+        <xacro:jaco_joint joint_name="${joint_base}" type="fixed" parent="${parent}" child="${link_base}" joint_axis_xyz="${joint_base_axis_xyz}" joint_origin_xyz="${joint_base_origin_xyz}" joint_origin_rpy="${joint_base_origin_rpy}" joint_lower_limit="0" joint_upper_limit="0"/>
         <xacro:jaco_link link_name="${link_1}">
             <xacro:insert_block name="link_1_link_data" />
         </xacro:jaco_link>
