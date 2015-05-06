@@ -104,6 +104,16 @@
   <property name="link_end_effector"   value="jaco_end_effector" />
   <property name="end_effector_offset" value="0.1687" />
 
+  <xacro:macro name="jaco_inertia" params="cog mass ixx ixy ixz iyy iyz izz">
+      <inertial>
+          <origin xyz="${cog}" rpy="0 0 0"/>
+          <mass value="1" />
+          <inertia ixx="${ixx/10}" ixy="${ixy/10}" ixz="${ixz/10}"
+              iyy="${iyy/10}" iyz="${iyz/10}"
+              izz="${izz/10}" />
+      </inertial>
+  </xacro:macro>
+
   <property name="link_base_link_data">
       <link_data>
           <collision>
@@ -118,6 +128,7 @@
                 <box size="0.051 0.011 0.038" />
             </geometry>
         </collision>
+        <xacro:jaco_inertia cog="0 0 0" mass="0.100" ixx="0.100" ixy="0" ixz="0" iyy="0.100" iyz="0" izz="0.100" />
       </link_data>
   </property>
 
@@ -147,6 +158,7 @@
                     <box size="0.079 0.027 0.080" />
                 </geometry>
             </collision>
+            <xacro:jaco_inertia cog="0.0692 0.0002 -0.0103" mass="0.814" ixx="1.02e-2" ixy="-5.21e-7" ixz="-2.12e-3" iyy="3.25e-2" iyz="-4.14e-7" izz="3.54e-2" />
       </link_data>
   </property>
 
@@ -170,6 +182,7 @@
                     <box size="0.411 0.082 0.027" />
                 </geometry>
             </collision>
+            <xacro:jaco_inertia cog="0.2052 0.0000 0.0223" mass="1.055" ixx="3.79e-1" ixy="0" ixz="0" iyy="3.73e-1" iyz="-5.90e-6" izz="6.98e-3" />
         </link_data>
   </property>
 
@@ -235,6 +248,7 @@
                     <box size="0.15 0.072 0.02" />
                 </geometry>
             </collision>
+            <xacro:jaco_inertia cog="0.0196 0.0000 0.0644" mass="0.843" ixx="5.11e-2" ixy="1.92e-7" ixz="-1.59e-4" iyy="4.80e-2" iyz="-1.96e-7" izz="1.29e-2" />
         </link_data>
   </property>
 
@@ -258,6 +272,7 @@
                     <cylinder length="0.045" radius="0.032" />
                 </geometry>
             </collision>
+            <xacro:jaco_inertia cog="0.0082 0.0000 -0.0373" mass="0.447" ixx="2.81e-3" ixy="8.30e-4" ixz="7.67e-7" iyy="3.96e-3" iyz="-2.66e-7" izz="4.13e-3" />
         </link_data>
   </property>
 
@@ -281,6 +296,7 @@
                     <cylinder length="0.045" radius="0.032" />
                 </geometry>
             </collision>
+            <xacro:jaco_inertia cog="0.0082 0.0000 -0.0373" mass="0.447" ixx="2.81e-3" ixy="8.30e-4" ixz="7.67e-7" iyy="3.96e-3" iyz="-2.66e-7" izz="4.13e-3" />
         </link_data>
   </property>
 
@@ -340,6 +356,7 @@
                     <cylinder length="0.02" radius="0.04" />
                 </geometry>
             </collision>
+            <xacro:jaco_inertia cog="0.0192 0.0000 -0.0936" mass="0.948" ixx="1.591e-2" ixy="-3.11e-3" ixz="3.16e-5" iyy="1.15e-2" iyz="-6.37e-5" izz="1.97e-2" />
         </link_data>
   </property>
 
@@ -351,6 +368,7 @@
                   <box size="0.119 0.022 0.019" />
               </geometry>
           </collision>
+          <xacro:jaco_inertia cog="0 0 0" mass="0.01" ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </link_data>
   </property>
 
